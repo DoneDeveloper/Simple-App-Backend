@@ -11,9 +11,8 @@ namespace backend.Models
         [Key]
         public string Id { get; set; }
         public string Name { get; set; }
-        public virtual Location Location { get; set; }
-
-        public virtual List<Car> Cars { get; set; }
+        public Location Location { get; set; }
+        public List<Car> Cars { get; set; }
     }
 
 }

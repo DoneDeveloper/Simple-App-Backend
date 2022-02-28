@@ -1,4 +1,5 @@
 using backend.Data;
+using backend.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -24,6 +25,12 @@ namespace backend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            //Services
+            services.AddScoped<ProductService>();
+
+
+            //Context
             services.AddControllersWithViews();
             services.AddEntityFrameworkSqlite().AddDbContext<AppDbContext>();
         }
@@ -45,6 +52,16 @@ namespace backend
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseCors(builder =>
+            {
+                builder
+                    .SetIsOriginAllowed(x => true)
+                    .AllowAnyHeader()
+                    .WithMethods("GET", "POST", "OPTIONS", "DELETE", "PUT").SetPreflightMaxAge(new TimeSpan(2, 0, 0))
+                    .AllowCredentials();
+            });
+
 
             app.UseAuthorization();
 

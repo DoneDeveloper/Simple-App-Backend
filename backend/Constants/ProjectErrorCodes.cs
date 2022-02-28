@@ -9,6 +9,7 @@ namespace Arx.ElpeChargeGo.Core.Constants
     {
         GenericError,
         InvalidPayload,
-        NotExisting
+        NotExisting,
+        InternalError
     }
 }
