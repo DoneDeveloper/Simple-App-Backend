@@ -58,5 +58,32 @@ namespace backend.Controllers
 
             return new APIResult<List<WarehouseResponse>>(ProjectErrorCodes.NotExisting,data.Error.Description);
         }
+
+        [HttpGet("get-car/{carId}")]
+        public async Task<APIResult<FullDescriptionCarResponse>> GetCar([FromRoute] int carId)
+        {
+            var theCar = await _appDbContext.Cars.Where(d => d._id == carId).FirstOrDefaultAsync();
+
+            if (theCar == null)
+                return new APIResult<FullDescriptionCarResponse>(ProjectErrorCodes.NotExisting, "Could not find car in the database");
+
+            var warehouse = await _appDbContext.Warehouses.Include(d => d.Location).Include(d => d.Cars).Where(d=>d.Cars.Contains(theCar)).FirstOrDefaultAsync();
+
+            if (theCar == null)
+                return new APIResult<FullDescriptionCarResponse>(ProjectErrorCodes.NotExisting, "Could not find car's warehouse in the database");
+
+            FullDescriptionCarResponse responseCar = new FullDescriptionCarResponse(){
+                car = theCar,
+                warehouseId = warehouse.Id,
+                warehouseLocationLat = warehouse.Location.lat,
+                warehouseLocationLong = warehouse.Location.@long,
+                warehouseLocationName = warehouse.Location.name,
+                warehouseName = warehouse.Name
+            };
+
+
+
+            return new APIResult<FullDescriptionCarResponse>(responseCar);
+        }
     }
 }
